@@ -1,4 +1,3 @@
-from calendar import c
 import random
 
 computer_word = random.choice(open('words.txt', "r").read().split())
@@ -27,13 +26,12 @@ invalid_guess2 = []
 
 # create a board based on letters in word
 def game_board(word, correct_guess):
-    letters_in_word_board = ""
-    for letter in word:
-        if letter in correct_guess:
-            letters_in_word_board = letter
-        else:
-            letters_in_word_board += "_ "
-    return letters_in_word_board
+    letters_in_word_board = ["_" for letter in word]
+    for i in range(len(word)):
+        if word[i] in correct_guess:
+            letters_in_word_board[i] = word[i]
+    word_board = " ".join(letters_in_word_board)
+    return word_board
 
 
 def invalid_input(guess):
@@ -70,18 +68,19 @@ def play_game(word):
     tries = 8
     # first_round_board(computer_word)
     # letters_in_word = [game_board for letter in computer_word]
+    board = game_board(computer_word, correct_guess)
+    print(board)
     while tries > 0:  # while loop says keep going until run out of tries
         # letters_in_word = ["_" for letter in word]
         # print(letters_in_word)
         # print("")
-        board = game_board(computer_word, correct_guess)
-        print(board)
+
         print(f'Incorrect letters: {incorrect_guess}')
         print("")
         guess = input("Guess a letter: ")
         print("")
-        invalid_input(guess)
-        duplicate_input(guess)
+        # invalid_input(guess)
+        # duplicate_input(guess)
         if guess not in word:
             tries -= 1
             print(f'Oof! {tries} guesses left.')
@@ -91,21 +90,24 @@ def play_game(word):
                 print('Darn! You have used up all of your guesses.')
                 print("")
                 print('Play again? (y/n)?')
-            else:
+        else:
                 # 3.1 identifies correct letter in word
                 # 3.2 lets the user know if their guess appears in the secret word
-                print(f'Nice! You still have {tries} guesses left.')
-                for i in range(len(word)):
-                    if guess == word[i]:
-                        word[i] = word
-                        correct_guess.append(guess)  # adds to guess
-                        print("")
-                    # print(f"{board}\n")
-                    if "_" not in board:
-                        print("You Win!")
-                        return
-                    # print(f'The word has {word_length} letters')
-                    # print(letters_in_word)
+            print(f'Nice! You still have {tries} guesses left.')
+            # for i in range(len(word)):
+            #     if guess == word[i]:
+            #         # word[i] = word
+            correct_guess.append(guess)  # adds to guess
+            print("")
+                # print(f"{board}\n")
+            board = game_board(computer_word, correct_guess)
+            print(correct_guess)
+            print(board)
+            if "_" not in board:
+                print("You Win!")
+                return
+                # print(f'The word has {word_length} letters')
+                # print(letters_in_word)
 
 
 play_game(computer_word)
